@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    
+    <label for="">Imagen:</label>
+    <input type="file" id="fileIMg"><br>
+    <label for="">Nombre</label>
+     <input type="text" id="nombreProduct"> <br>
+     <label for="">Descripcion</label>
+     <input type="text" id="Descripcion"><br>
+     <label for="">Precio  </label>
+     <input type="number" id="precio">
+     <br>
+     <br>
+     <input type="submit" id="submit" >
+
+
+<script>
+
+    const imagennn = document.getElementById("fileIMg")
+    const nombreProduct = document.getElementById("nombreProduct");   
+    const Descripcion = document.getElementById("Descripcion");   
+    const Precio = document.getElementById("precio");   
+    const btn = document.getElementById("submit");   
+    
+    btn.addEventListener("click",()=>{     
+
+load();
+
+
+})
+
+function convertToBase64(file) {
+    return new Promise((resolve, reject) => {//retorna una promesa
+        const reader = new FileReader();
+        reader.readAsDataURL(file); // Convierte el archivo a Base64
+        reader.onload = () => resolve(reader.result.split(",")[1]); // Extrae solo la parte Base64 y lo guarda en resolve
+        reader.onerror = error => reject(error);
+        
+    });
+}
+
+ async function  fsd(file) {
+    try{
+
+       const g4 = await convertToBase64(file); 
+
+       valorN =nombreProduct.value;
+       valorD =Descripcion.value;
+       valorP =Precio.value;
+
+       fetch("http://localhost:8080/NewProduct/Product", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    //body: JSON.stringify({ base64: base644 }),
+    body: JSON.stringify({ 
+        base64: g4,
+        nombre:valorN,
+        descripcion:valorD,
+        precio:valorP,
+    }),
+mode:"cors",
+    
+})
+
+}catch(error){
+
+    console.log("error");
+
+}
+}
+    function load(){
+    
+      fsd( imagennn.files[0]);
+
+    }
+
+</script>
+
+</body> 
+</html>
